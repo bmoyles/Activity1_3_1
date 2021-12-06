@@ -43,6 +43,18 @@ counter.penup()
 counter.goto(210, 135)
 counter.pendown()
 #functions--------------------------
+def draw_fruit():
+  random_fruit = rand.randint(0,4)
+  active_fruit.shape(fruitz[random_fruit])
+  active_fruit.showturtle()
+def random_location():
+  randomx = rand.randint(-150,150)
+  active_fruit.hideturtle()
+  active_fruit.penup()
+  active_fruit.goto(randomx, 400)
+  draw_fruit()
+ def fruit_drop():
+  
 '''
 def start_game():
 '''
@@ -53,11 +65,9 @@ def update_score():
   score_writer.clear()
   score_writer.write(score, font=font_setup) 
 def fruits_clicked(x,y):
+  random_location()
   update_score()
-def move_turtle(turtle,xx,yy):
-  turtle.penup()
-  turtle.goto(xx,yy)
-  turtle.pendown()
+  fruit_drop()
 def countdown():
   global timer, timer_up
   counter.clear()
