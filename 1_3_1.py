@@ -1,16 +1,15 @@
 #import commands
 import turtle as trtl
 import random as rand
-import leaderboard as lb
 #variables-------------------
-fruits = ["apple.gif","banana.gif","cherry.gif","orange.gif","pear.gif"]
-turtles = []
+fruitz = ["apple.gif","banana.gif","cherry.gif","orange.gif","pear.gif"]
 score = 0
 #turtle configuration------------
+active_fruit = trtl.Turtle()
 wn = trtl.Screen()
 wn.setup(width=600,height=350)
 wn.bgpic("fruit_ninja.gif")
-for x in fruits:
+for x in fruitz:
   wn.addshape(x)
 score_writer = trtl.Turtle()
 score_writer.hideturtle()
@@ -19,15 +18,42 @@ score_writer.goto(-180,170)
 counter = trtl.Turtle()
 counter.hideturtle()
 counter.color("white")
-font_setup = ("Arial", 15, "normal")
+font_setup = ("Arial", 12, "normal")
 timer = 3
 counter_interval = 1000   #1000 represents 1 second
 timer_up = False
+# Game start
+'''
+game_start = False
+start = trtl.Turtle()
+start.shape("triangle")
+start.shapesize(5, 10, 0)
+start.color("white")
+def start_game(x, y):
+  global game_start
+  game_start = True
+  start.hideturtle()
+start.onclick(start_game)
+while not(game_start):
+  fruits.hideturtle()
+  fruits.showturtle()
+'''
 #Timer------------------------------
 counter.penup()
-counter.goto(175, 150)
+counter.goto(210, 135)
 counter.pendown()
-#functions---------------------------
+#functions--------------------------
+'''
+def start_game():
+'''
+def update_score():
+  global score 
+  score += 1
+  print(score)
+  score_writer.clear()
+  score_writer.write(score, font=font_setup) 
+def fruits_clicked(x,y):
+  update_score()
 def move_turtle(turtle,xx,yy):
   turtle.penup()
   turtle.goto(xx,yy)
@@ -42,14 +68,8 @@ def countdown():
     counter.write("Timer: " + str(timer), font=font_setup)
     timer -= 1
     counter.getscreen().ontimer(countdown, counter_interval)
-
-
-
-
 #Events----------------------------
 wn.ontimer(countdown, counter_interval)
-
-
 wn = trtl.Screen()
 wn.mainloop()
 
