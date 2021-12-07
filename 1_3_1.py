@@ -1,11 +1,32 @@
 #import commands
 import turtle as trtl
 import random as rand
+class Er(Exception):
+  pass
 #variables-------------------
+active_fruit = trtl.Turtle()
+active_fruit.hideturtle()
+active_fruit.penup()
+while True:
+  try:
+    difficulty = int(input("Choose between difficulty 1, 2, or 3: ")
+    if difficulty == 1:
+      difficulty = 1
+      active_fruit.speed(1)
+    elif difficulty == 2:
+      difficulty = 2
+      active_fruit.speed(5)
+    elif difficulty == 3:
+      difficulty = 3
+      active_fruit.speed(0)
+    else:
+      raise Er(Exception)
+    break
+  except Er:
+    print("please only choose between said aforementioned difficulties")
 fruitz = ["apple.gif","banana.gif","cherry.gif","orange.gif","pear.gif"]
 score = 0
 #turtle configuration------------
-active_fruit = trtl.Turtle()
 wn = trtl.Screen()
 wn.setup(width=600,height=350)
 wn.bgpic("fruit_ninja.gif")
@@ -47,14 +68,19 @@ def draw_fruit():
   random_fruit = rand.randint(0,4)
   active_fruit.shape(fruitz[random_fruit])
   active_fruit.showturtle()
+  fruit_drop()
 def random_location():
   randomx = rand.randint(-150,150)
   active_fruit.hideturtle()
-  active_fruit.penup()
   active_fruit.goto(randomx, 400)
   draw_fruit()
  def fruit_drop():
-  
+  ycor = active_fruit.ycor()
+  speed = 2
+  while ycor > -200:
+    active_fruit.sety(ycor-speed*difficulty)
+    speed*2 = speed
+  random_location()
 '''
 def start_game():
 '''
@@ -64,10 +90,13 @@ def update_score():
   print(score)
   score_writer.clear()
   score_writer.write(score, font=font_setup) 
-def fruits_clicked(x,y):
-  random_location()
-  update_score()
-  fruit_drop()
+def fruits_clicked():
+  if timer_up == False:
+    update_score()
+    random_location()
+  else:
+    active_fruit.hideturtle()
+    active_fruit.clear()
 def countdown():
   global timer, timer_up
   counter.clear()
@@ -79,8 +108,8 @@ def countdown():
     timer -= 1
     counter.getscreen().ontimer(countdown, counter_interval)
 #Events----------------------------
+active_fruit.onclick(fruits_clicked)
 wn.ontimer(countdown, counter_interval)
-wn = trtl.Screen()
 wn.mainloop()
 
 
