@@ -1,3 +1,7 @@
+#this code is meant to replicate the mobile game fruit ninja.
+#choose your difficulty, press the play button to start, and click the fruits as they fall!
+#be careful, if the fruits reach the bottom before you click them, your score will go down
+#see how many points you can get before the timer ends!
 #import commands
 import turtle as trtl
 import random as rand
