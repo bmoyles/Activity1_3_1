@@ -1,14 +1,10 @@
-'''
 #   leaderboard.py
 # The leaderboard module to be used in a122 solution.
- 
+'''
 # set the levels of scoring
-bronze_score = 15
-silver_score = 20
-gold_score = 25
- 
+
 # load leaderboard from file
-def load_leaderboard(file_name, leader_names, leader_scores):
+def load_leaderboard(file_name, highest_score):
  
   leaderboard_file = open(file_name, "r")  # need to create the file ahead of time in same folder
  
@@ -77,42 +73,31 @@ def update_leaderboard(file_name, leader_names, leader_scores, player_name, play
  
  
 # draw leaderboard and display a message to player
-def draw_leaderboard(leader_names, leader_scores, high_scorer, turtle_object, player_score):
+def draw_leaderboard(highest_score, player_score, turtle_object):
  
   # clear the screen and move turtle object to (-200, 100) to start drawing the leaderboard
   font_setup = ("Arial", 20, "normal")
   turtle_object.clear()
-  turtle_object.penup()
-  turtle_object.goto(-200,100)
-  turtle_object.hideturtle()
-  turtle_object.down()
-  leader_index = 0
+  
  
   # loop through the lists and use the same index to display the corresponding name and score, separated by a tab space '\t'
-  while leader_index < len(leader_names):
-    turtle_object.write(str(leader_index + 1) + "\t" + leader_names[leader_index] + "\t" + str(leader_scores[leader_index]), font=font_setup)
-    turtle_object.penup()
-    turtle_object.goto(-200,int(turtle_object.ycor())-50)
-    turtle_object.down()
-    leader_index = leader_index + 1
+  
  
   # Display message about player making/not making leaderboard based on high_scorer
-  if (high_scorer):
+  if (highest_score):
     turtle_object.write("Congratulations! You made the leaderboard!", font=font_setup)
   else:
     turtle_object.write("Sorry, you didn't make the leaderboard. Maybe next time!", font=font_setup)
  
   # move turtle to a new line
   turtle_object.penup()
-  turtle_object.goto(-200,int(turtle_object.ycor())-50)
+  turtle_object.sety()
   turtle_object.pendown()
  
   # TODO 10: Display a gold/silver/bronze message if player earned a gold/silver/or bronze medal; display nothing if no medal
  
-  if (player_score >= bronze_score and player_score < silver_score):
-    turtle_object.write("... Bronze medal!", font=font_setup)
-  elif (player_score >= silver_score and player_score < gold_score):
-    turtle_object.write("... Silver medal!", font=font_setup)
-  elif (player_score >= gold_score):
-    turtle_object.write("... Gold medal!", font=font_setup)
+  if (player_score > highest_score):
+    turtle_object.write("You beat the high score! New high score is: "+highest_score, font=font_setup)
+  else:
+    turtle_object.write("Your score was: "+player_score". you need "+(highest_score-player_score+1)+" to beat the high score of "+highest_score, font=font_setup)
 '''

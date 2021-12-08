@@ -20,7 +20,7 @@ while True:
       fruit_dis = 25
       fruit_speed = 5
     elif difficulty == 3:
-      fruit_dis = 40
+      fruit_dis = 30
       fruit_speed = 0
     #heres where we used the classed exception
     else:
@@ -37,8 +37,9 @@ fruitz = ["apple.gif","cherry.gif","orange.gif","pear.gif","banana.gif"]
 #variable that represents starting score
 score = 0
 font_setup = ("Arial", 15, "normal")
-timer = 30
+timer = 5
 counter_interval = 1000   #1000 represents 1 second
+leaderboard_file_name = "LB.txt"
 timer_up = False
 game_start = False
 #turtle configuration---------------------------
@@ -70,6 +71,24 @@ counter.penup()
 counter.goto(600,350)
 counter.pendown()
 #functions--------------------------
+'''
+# manages the leaderboard for top 5 scorers
+def manage_leaderboard():
+  
+  global score
+
+ 
+  # load all the leaderboard records into the lists
+  lb.load_leaderboard(leaderboard_file_name, score)
+
+  # TODO
+  if (len(leader_scores_list) < 5 or score > leader_scores_list[4]):
+    lb.update_leaderboard(leaderboard_file_name, leader_names_list, leader_scores_list, player_name, score)
+    lb.draw_leaderboard(leader_names_list, leader_scores_list, True, score_writer, score)
+
+  else:
+    lb.draw_leaderboard(leader_names_list, leader_scores_list, False, score_writer, score)
+'''
 #selects a random fruit shape from the list using the random import, and makes the main turtle that shape
 def draw_fruit():
     random_fruit = rand.randint(0,4)
@@ -153,12 +172,12 @@ start_game.onclick(start_click)
 gamestart_anim()
 #begins timer countdown
 wn.ontimer(countdown, counter_interval)
+#write down initial starting score of 0
+score_writer.write(score, font=font_setup)
 #begins fruit dropping and clicking 
 random_location()
 draw_fruit()
 active_fruit.onclick(fruits_clicked)
 fruit_drop()
-#write down initial starting score of 0
-score_writer.write(score, font=font_setup)
 #loops so the program does not close upon event completion 
 wn.mainloop()
