@@ -25,6 +25,7 @@ while True:
   #heres where we used the classed exception
   except Er:
     print("please only choose between said aforementioned difficulties")
+  #will loop if the while true statement returns a value error (happens when user inputs a letter instead of an integer)
   except ValueError:
     print("please only choose between said aforementioned difficulties")
 #created a list to store all fruit images 
