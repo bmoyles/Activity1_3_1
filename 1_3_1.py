@@ -5,6 +5,7 @@
 #import commands
 import turtle as trtl
 import random as rand
+import highscore as hs
 #classes an exception so i can retrieve only the input i ask for (shown below)
 class Er(Exception):
   pass
@@ -32,14 +33,15 @@ while True:
   #will loop if the while true statement returns a value error (happens when user inputs a letter instead of an integer)
   except ValueError:
     print("please only choose between said aforementioned difficulties")
+
 #created a list to store all fruit images 
 fruitz = ["apple.gif","cherry.gif","orange.gif","pear.gif","banana.gif"]
 #variable that represents starting score
 score = 0
 font_setup = ("Arial", 15, "normal")
-timer = 5
+timer = 10
 counter_interval = 1000   #1000 represents 1 second
-leaderboard_file_name = "LB.txt"
+score_file = "LB.txt"
 timer_up = False
 game_start = False
 #turtle configuration---------------------------
@@ -71,36 +73,27 @@ counter.penup()
 counter.goto(600,350)
 counter.pendown()
 #functions--------------------------
-'''
+
 # manages the leaderboard for top 5 scorers
-def manage_leaderboard():
-  
+def manage_highscore():
   global score
+  hs.score_evaluation(score_file,score,score_writer)
 
- 
-  # load all the leaderboard records into the lists
-  lb.load_leaderboard(leaderboard_file_name, score)
-
-  # TODO
-  if (len(leader_scores_list) < 5 or score > leader_scores_list[4]):
-    lb.update_leaderboard(leaderboard_file_name, leader_names_list, leader_scores_list, player_name, score)
-    lb.draw_leaderboard(leader_names_list, leader_scores_list, True, score_writer, score)
-
-  else:
-    lb.draw_leaderboard(leader_names_list, leader_scores_list, False, score_writer, score)
-'''
 #selects a random fruit shape from the list using the random import, and makes the main turtle that shape
 def draw_fruit():
     random_fruit = rand.randint(0,4)
     active_fruit.shape(fruitz[random_fruit])
+
 #moves main turtle to a random location on the x axis at the top of the screen to be dropped
 def random_location():
   randomx = rand.randint(-500,500)
   active_fruit.hideturtle()
   active_fruit.speed(fruit_speed)
   active_fruit.goto(randomx, 400)
+
 #function that drops the fruit
 def fruit_drop():
+  #1print(f"fruit_drop: turtles: {wn.turtles()}")
   global timer_up
   ycor = active_fruit.ycor()
   #and if statement to only continue the movement IF the timer is not out
@@ -124,12 +117,14 @@ def fruit_drop():
       random_location()
       draw_fruit()
       fruit_drop()
+
 #retrieves global score and updates score on screen to match
 def update_score():
   global score 
   score += 1
   score_writer.clear()
   score_writer.write(score, font=font_setup) 
+
 #the function that dictates what happens when the fruit is clicked
 def fruits_clicked(x,y):
   global timer_up
@@ -142,28 +137,40 @@ def fruits_clicked(x,y):
     fruit_drop()
   else:
     active_fruit.hideturtle()
+
 #retrieves the time, and adjusts it according to how long you have been playing
 def countdown():
-  global timer, timer_up
-  counter.clear()
+  global timer, timer_up, score
+  # print(f"countdown: {timer=} {timer_up=} {score=}")
   if timer <= 0:
+    #print(f"countdown over: {timer=} {timer_up=} {score=}")
+    counter.clear()
     counter.write("Time's Up", font=font_setup)
     timer_up = True
+    manage_highscore()
   else:
+    #print(f"coundown, counter still going: {timer=} {timer_up=} {score=}")
+    counter.clear()
     counter.write("Timer: " + str(timer), font=font_setup)
     timer -= 1
-    counter.getscreen().ontimer(countdown, counter_interval)
+    #counter.getscreen().ontimer(countdown, counter_interval)
+    wn.ontimer(countdown, counter_interval)
+    # print(f"countdown, counter still going, event scheduled, {timer=} {timer_up=} {score=}")
+
+
 #dictates what will happen when user clicks the start button
 def start_click(x,y):
   global game_start
   game_start = True
   start_game.hideturtle()
   start_game.goto(0,-1000)
+
 #the animation for the start button. This loops until the start button is clicked, and then will break, continuing into the actual game
 def gamestart_anim():
   global game_start
   while game_start == False:
     start_game.circle(20)
+
 #Events----------------------------
 start_game.shape("game_start.gif")
 start_game.showturtle()
@@ -172,6 +179,7 @@ start_game.onclick(start_click)
 gamestart_anim()
 #begins timer countdown
 wn.ontimer(countdown, counter_interval)
+
 #write down initial starting score of 0
 score_writer.write(score, font=font_setup)
 #begins fruit dropping and clicking 
