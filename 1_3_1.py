@@ -39,7 +39,7 @@ fruitz = ["apple.gif","cherry.gif","orange.gif","pear.gif","banana.gif"]
 #variable that represents starting score
 score = 0
 font_setup = ("Arial", 15, "normal")
-timer = 10
+timer = 30
 counter_interval = 1000   #1000 represents 1 second
 score_file = "LB.txt"
 timer_up = False
@@ -94,7 +94,7 @@ def random_location():
 #function that drops the fruit
 def fruit_drop():
   #1print(f"fruit_drop: turtles: {wn.turtles()}")
-  global timer_up
+  global timer_up, score
   ycor = active_fruit.ycor()
   #and if statement to only continue the movement IF the timer is not out
   if timer_up == False:
@@ -110,7 +110,6 @@ def fruit_drop():
       active_fruit.sety(ycor-fruit_dis)
     #IF the fruit is not clicked by the time the turtle reaches specified placement, you will lose one point, and the turtle will reset
     if ycor <= -400:
-      global score
       score -= 1
       score_writer.clear()
       score_writer.write(score, font=font_setup)
@@ -142,25 +141,30 @@ def fruits_clicked(x,y):
 def countdown():
   global timer, timer_up, score
   # print(f"countdown: {timer=} {timer_up=} {score=}")
-  if timer <= 0:
-    #print(f"countdown over: {timer=} {timer_up=} {score=}")
-    counter.clear()
-    counter.write("Time's Up", font=font_setup)
-    timer_up = True
-    manage_highscore()
-  else:
-    #print(f"coundown, counter still going: {timer=} {timer_up=} {score=}")
-    counter.clear()
-    counter.write("Timer: " + str(timer), font=font_setup)
-    timer -= 1
-    #counter.getscreen().ontimer(countdown, counter_interval)
-    wn.ontimer(countdown, counter_interval)
-    # print(f"countdown, counter still going, event scheduled, {timer=} {timer_up=} {score=}")
-
+  try:
+    if timer <= 0:
+      #print(f"countdown over: {timer=} {timer_up=} {score=}")
+      counter.clear()
+      counter.write("Time's Up", font=font_setup)
+      timer_up = True
+      manage_highscore()
+    else:
+      #print(f"coundown, counter still going: {timer=} {timer_up=} {score=}")
+      counter.clear()
+      counter.write("Timer: " + str(timer), font=font_setup)
+      timer -= 1
+      counter.getscreen().ontimer(countdown, counter_interval)
+      # print(f"countdown, counter still going, event scheduled, {timer=} {timer_up=} {score=}")
+  except trtl.Terminator:
+    pass
 
 #dictates what will happen when user clicks the start button
 def start_click(x,y):
   global game_start
+  random_location()
+  draw_fruit()
+  countdown()
+  score_writer.write(score, font=font_setup)
   game_start = True
   start_game.hideturtle()
   start_game.goto(0,-1000)
@@ -177,14 +181,6 @@ start_game.showturtle()
 #will run start_click() function when the start game turtle is clicked
 start_game.onclick(start_click)
 gamestart_anim()
-#begins timer countdown
-wn.ontimer(countdown, counter_interval)
-
-#write down initial starting score of 0
-score_writer.write(score, font=font_setup)
-#begins fruit dropping and clicking 
-random_location()
-draw_fruit()
 active_fruit.onclick(fruits_clicked)
 fruit_drop()
 #loops so the program does not close upon event completion 
