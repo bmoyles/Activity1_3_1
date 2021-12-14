@@ -133,7 +133,7 @@ def fruitloop():
         active_fruit.showturtle()
         # start the countdown
         countdown()
-    elif timer_up == True:
+    elif timer_up is True:
         # all done, hide any fruit
         active_fruit.hideturtle()
         # handle high score/leaderboards
@@ -176,7 +176,7 @@ def fruitloop():
 def update_score(scored_point=None):
     global score
     if scored_point is not None:
-        if scored_point == True:
+        if scored_point is True:
             print("Scored a point")
             score += 1
         else:
